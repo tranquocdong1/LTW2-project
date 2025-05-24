@@ -10,6 +10,8 @@ public class User {
     private Long id;
     private String name;
     private String email;
+    @ManyToOne
+    private Company company;
 
     // Getters and Setters
     public Long getId() {
@@ -35,4 +37,13 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
 }
