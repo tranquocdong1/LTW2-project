@@ -3,15 +3,29 @@ package com.example.user_management.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "users-management")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false, unique = true)
     private String email;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
     private Company company;
+
+    // Constructors
+    public User() {}
+
+    public User(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
 
     // Getters and Setters
     public Long getId() {
@@ -46,4 +60,13 @@ public class User {
         this.company = company;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", company=" + (company != null ? company.getName() : "null") +
+                '}';
+    }
 }

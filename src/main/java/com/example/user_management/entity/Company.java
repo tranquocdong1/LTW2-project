@@ -1,12 +1,6 @@
 package com.example.user_management.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,11 +10,22 @@ public class Company {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String name;
+
     private String address;
 
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<User> users = new ArrayList<>();
+
+    // Constructors
+    public Company() {}
+
+    public Company(String name, String address) {
+        this.name = name;
+        this.address = address;
+    }
 
     // Getters and Setters
     public Long getId() {
@@ -53,5 +58,26 @@ public class Company {
 
     public void setUsers(List<User> users) {
         this.users = users;
+    }
+
+    // Helper methods
+    public void addUser(User user) {
+        users.add(user);
+        user.setCompany(this);
+    }
+
+    public void removeUser(User user) {
+        users.remove(user);
+        user.setCompany(null);
+    }
+
+    @Override
+    public String toString() {
+        return "Company{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", userCount=" + users.size() +
+                '}';
     }
 }
