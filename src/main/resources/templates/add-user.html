@@ -39,7 +39,12 @@
                 <p class="text-muted">Fill in the form below to add a new user</p>
             </div>
 
-            <!-- Form Card -->
+            <!-- Error Message -->
+            <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle"></i> <span th:text="${errorMessage}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
             <!-- Form Card -->
             <div class="card shadow-sm">
                 <div class="card-body p-4">

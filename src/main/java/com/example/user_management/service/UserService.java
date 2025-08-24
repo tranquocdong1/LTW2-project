@@ -4,6 +4,7 @@ import com.example.user_management.entity.User;
 import com.example.user_management.entity.Company;
 import com.example.user_management.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,12 +18,17 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     // Thêm người dùng mới
     public User addUser(User user) {
         // Kiểm tra email đã tồn tại
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new IllegalArgumentException("Email already exists: " + user.getEmail());
         }
+        // Mã hóa password trước khi lưu (nếu cần)
+        user.setPassword(passwordEncoder.encode(user.getPassword())); //
         return userRepository.save(user);
     }
 
