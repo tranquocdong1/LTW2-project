@@ -37,7 +37,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/css/**", "/js/**").permitAll() // cho phép login page & static
+                        .requestMatchers("/login", "/register", "/css/**", "/js/**").permitAll() // cho phép login page & static
                         .requestMatchers("/h2-console/**").permitAll()              // ✅ Cho phép H2 Console
                         .requestMatchers("/users/**").hasRole("ADMIN")              // chỉ ADMIN truy cập users
                         .anyRequest().authenticated()
