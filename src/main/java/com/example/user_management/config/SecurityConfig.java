@@ -10,6 +10,12 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.Authentication;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Configuration
 public class SecurityConfig {
@@ -34,18 +40,42 @@ public class SecurityConfig {
     }
 
     @Bean
+    public AuthenticationSuccessHandler customAuthenticationSuccessHandler() {
+        return new AuthenticationSuccessHandler() {
+            @Override
+            public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+                                                Authentication authentication) throws IOException {
+                try {
+                    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+                    System.out.println("User authorities: " + userDetails.getAuthorities());
+                    boolean isAdmin = userDetails.getAuthorities().stream()
+                            .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
+                    String redirectUrl = isAdmin ? "/users" : "/";
+                    System.out.println("Redirecting to: " + redirectUrl);
+                    response.sendRedirect(redirectUrl);
+                } catch (Exception e) {
+                    System.err.println("Error in authentication success handler: " + e.getMessage());
+                    response.sendRedirect("/login?error");
+                }
+            }
+        };
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register", "/css/**", "/js/**").permitAll() // cho phép login page & static
-                        .requestMatchers("/h2-console/**").permitAll()              // ✅ Cho phép H2 Console
-                        .requestMatchers("/users/**").hasRole("ADMIN")              // chỉ ADMIN truy cập users
+                        .requestMatchers("/login", "/register", "/css/**", "/js/**", "/access-denied").permitAll()
+                        .requestMatchers("/h2-console/**").permitAll() // Chỉ giữ nếu dùng H2
+                        .requestMatchers("/users/**").hasRole("ADMIN")
+                        .requestMatchers("/companies/**").hasRole("ADMIN")
+                        .requestMatchers("/").authenticated()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login")      // dùng form login custom
-                        .usernameParameter("email") // login bằng email
-                        .defaultSuccessUrl("/users", true) // sau login về trang user list
+                        .loginPage("/login")
+                        .usernameParameter("email")
+                        .successHandler(customAuthenticationSuccessHandler())
                         .permitAll()
                 )
                 .logout(logout -> logout
@@ -53,10 +83,12 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()
                 )
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**")) // ✅ bỏ CSRF cho H2
-                .headers(headers -> headers.frameOptions().disable());        // ✅ cho phép iframe (H2 console cần)
+                .exceptionHandling(ex -> ex
+                        .accessDeniedPage("/access-denied") // Chuyển hướng đến trang access-denied khi lỗi 403
+                )
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**")) // Chỉ giữ nếu dùng H2
+                .headers(headers -> headers.frameOptions().sameOrigin());    // Chỉ giữ nếu dùng H2
 
         return http.build();
     }
-
 }
