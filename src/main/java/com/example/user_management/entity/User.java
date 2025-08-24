@@ -1,6 +1,9 @@
 package com.example.user_management.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "users")
@@ -9,13 +12,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Full name cannot be empty")
     @Column(nullable = false)
     private String name;
 
+    @NotBlank(message = "Email cannot be empty")
+    @Email(message = "Email must be valid")
     @Column(nullable = false, unique = true)
     private String email;
 
     // password (lưu đã mã hoá)
+    @NotBlank(message = "Password cannot be empty")
+    @Size(min = 6, message = "Password must be at least 6 characters")
     @Column(nullable = false, length = 100)
     private String password;
 
@@ -38,7 +46,6 @@ public class User {
     }
 
     // Getters & Setters
-
     public Long getId() {
         return id;
     }
