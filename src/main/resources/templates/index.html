@@ -28,6 +28,14 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/companies"><i class="fas fa-building"></i> Companies</a>
                 </li>
+                <!-- Logout button -->
+                <li class="nav-item">
+                    <form th:action="@{/logout}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-danger btn-sm ms-2">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </form>
+                </li>
             </ul>
         </div>
     </div>

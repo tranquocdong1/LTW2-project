@@ -40,6 +40,7 @@
             </div>
 
             <!-- Form Card -->
+            <!-- Form Card -->
             <div class="card shadow-sm">
                 <div class="card-body p-4">
                     <form th:action="@{/users/add}" th:object="${user}" method="post">
@@ -69,6 +70,20 @@
                                    placeholder="Enter email address"
                                    required>
                             <div class="form-text">Enter a valid email address</div>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="mb-3">
+                            <label for="password" class="form-label">
+                                <i class="fas fa-lock text-warning"></i> Password
+                            </label>
+                            <input type="password"
+                                   th:field="*{password}"
+                                   id="password"
+                                   class="form-control form-control-lg"
+                                   placeholder="Enter password"
+                                   required>
+                            <div class="form-text">Password must be at least 6 characters</div>
                         </div>
 
                         <!-- Company Field -->
