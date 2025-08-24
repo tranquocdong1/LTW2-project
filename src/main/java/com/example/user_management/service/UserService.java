@@ -28,7 +28,7 @@ public class UserService {
             throw new IllegalArgumentException("Email already exists: " + user.getEmail());
         }
         // Mã hóa password trước khi lưu (nếu cần)
-        user.setPassword(passwordEncoder.encode(user.getPassword())); //
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -42,6 +42,12 @@ public class UserService {
     @Transactional(readOnly = true)
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
+    }
+
+    // ✅ Lấy người dùng theo email
+    @Transactional(readOnly = true)
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     // Lấy users không thuộc company nào

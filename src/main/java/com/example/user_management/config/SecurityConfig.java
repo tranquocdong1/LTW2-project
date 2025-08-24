@@ -65,7 +65,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/css/**", "/js/**", "/access-denied").permitAll()
+                        .requestMatchers("/login", "/register", "/css/**", "/js/**", "/access-denied").permitAll()
                         .requestMatchers("/h2-console/**").permitAll() // Chỉ giữ nếu dùng H2
                         .requestMatchers("/users/**").hasRole("ADMIN")
                         .requestMatchers("/companies/**").hasRole("ADMIN")
