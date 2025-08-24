@@ -74,6 +74,21 @@
                             <div class="form-text">Enter a valid email address</div>
                         </div>
 
+                        <!-- Password Field -->
+                        <div class="mb-3">
+                            <label for="password" class="form-label">
+                                <i class="fas fa-lock text-danger"></i> Password
+                            </label>
+                            <input type="password"
+                                   th:field="*{password}"
+                                   id="password"
+                                   class="form-control form-control-lg"
+                                   placeholder="Enter new password (leave blank to keep current)">
+                            <div class="form-text">
+                                Leave blank if you do not want to change the password
+                            </div>
+                        </div>
+
                         <!-- Company Field -->
                         <div class="mb-4">
                             <label for="company" class="form-label">
@@ -88,6 +103,7 @@
                             </select>
                             <div class="form-text">Select a company or leave blank if not applicable</div>
                         </div>
+
 
                         <!-- Buttons -->
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
