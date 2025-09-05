@@ -65,9 +65,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register", "/css/**", "/js/**", "/access-denied").permitAll()
+                        .requestMatchers("/login", "/register", "/css/**", "/js/**", "/access-denied", "/api/csrf-token").permitAll()
                         .requestMatchers("/h2-console/**").permitAll() // Chỉ giữ nếu dùng H2
-                        .requestMatchers("/users/**").hasRole("ADMIN")
+                        .requestMatchers("/users/**", "/api/users/**", "api/companies/**").hasRole("ADMIN")
                         .requestMatchers("/companies/**").hasRole("ADMIN")
                         .requestMatchers("/").authenticated()
                         .anyRequest().authenticated()
@@ -86,7 +86,7 @@ public class SecurityConfig {
                 .exceptionHandling(ex -> ex
                         .accessDeniedPage("/access-denied") // Chuyển hướng đến trang access-denied khi lỗi 403
                 )
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**")) // Chỉ giữ nếu dùng H2
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**", "/api/users/**", "api/companies/**")) // Chỉ giữ nếu dùng H2
                 .headers(headers -> headers.frameOptions().sameOrigin());    // Chỉ giữ nếu dùng H2
 
         return http.build();

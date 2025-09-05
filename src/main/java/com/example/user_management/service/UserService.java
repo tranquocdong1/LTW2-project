@@ -44,7 +44,7 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    // ✅ Lấy người dùng theo email
+    // Lấy người dùng theo email
     @Transactional(readOnly = true)
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
