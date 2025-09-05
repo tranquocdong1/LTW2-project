@@ -1,5 +1,6 @@
 package com.example.user_management.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ public class Company {
     private String address;
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference // Thêm annotation này
     private List<User> users = new ArrayList<>();
 
     // Constructors
