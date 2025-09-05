@@ -1,5 +1,6 @@
 package com.example.user_management.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -33,6 +34,7 @@ public class User {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
+    @JsonBackReference // Thêm annotation này - sẽ bị ignore khi serialize
     private Company company;
 
     public User() {}
